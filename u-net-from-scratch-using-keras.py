@@ -63,3 +63,12 @@ output = tf.keras.layers.Conv2D(1, (1,1), activation='sigmoid')(c9)
 model = tf.keras.Model(inputs=[input], outputs=[output])
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 model.summary()
+
+check_point = tf.keras.callbacks.ModelCheckpoint('u-net_from_scratch.h5', verbose=1, save_best_only)
+
+call_backs = [
+    tf.keras.callbacks.EarlyStopping(patience=3, monitor='val_loss')
+    tf.keras.callbacks.TensorBoard(log_dir='logs')
+]
+
+output = model.fit(X, Y, validation_split=0.2, epochs=50, batch_size=32, callbacks=call_backs)
