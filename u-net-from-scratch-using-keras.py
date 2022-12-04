@@ -1,4 +1,12 @@
 import tensorflow as tf
+import os
+import random
+import numpy as np
+from tqdm import tqdm
+
+from skimage.io import imread, imshow
+from skimage.transform import resize
+import matplotlib.pyplot as plt
 
 IMG_WIDTH = 128
 IMG_HEIGHT = 128
@@ -6,6 +14,23 @@ IMG_CHANNELS = 3
 
 input = tf.keras.layers.Input((IMG_WIDTH, IMG_HEIGHT, IMG_CHANNELS))
 input = tf.keras.layers.Lambda(lamda x : x / 255)(input)
+
+TRAIN_PATH = 'stage1_train/'
+TEST_PATH = 'stage1_test/'
+
+train_ids = next(os.walk(TRAIN_PATH))[1]
+test_ids = next(os.walk(TEST_PATH))[1]
+
+X_train = np.zeros((len(train_ids), IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS), dtype=np.uint8)
+Y_train = np.zeros((len(train_ids), IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.bool)
+
+print("Resizing training image and masks")
+for n, id_ in tqdm(enumerate(train_ids), total=len(train_ids)):
+    path = TRAIN_PATH + id_
+    img = imread(path + '/images/' + id_ + '.png')[:,:,:IMG_CHANNELS]
+    img = resize(img, (IMG_HEIGHT, IMG_WIDTH), mode='constant', preserve_range=True)
+    X_train[n] = img
+    mask = np.zeros((IMG_HEIGHT, IMG_WIDTH, 1), dtype=np.bool)
 
 # first layer
 conv1 = tf.keras.layers.Conv2D(16, (3,3), activation='relu', kernel_initializer='he_normal', padding='same')(input)
