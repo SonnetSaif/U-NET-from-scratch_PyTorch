@@ -8,6 +8,9 @@ from skimage.io import imread, imshow
 from skimage.transform import resize
 import matplotlib.pyplot as plt
 
+seed = 42
+np.random.seed = seed
+
 IMG_WIDTH = 128
 IMG_HEIGHT = 128
 IMG_CHANNELS = 3
@@ -49,6 +52,11 @@ for n, id_ in tqdm(enumerate(test_ids), total=len(test_ids)):
 
 print('Successfully resized images')))
 
+image_x = random.randint(0, len(train_ids))
+imshow(X_train[image_x])
+plt.show()
+imshow(np.squeeze(Y_train[image_x]))
+plt.show()
 # first layer
 conv1 = tf.keras.layers.Conv2D(16, (3,3), activation='relu', kernel_initializer='he_normal', padding='same')(input)
 conv1 = tf.keras.layers.Dropout(0.1)(conv1)
@@ -113,4 +121,4 @@ call_backs = [
     tf.keras.callbacks.TensorBoard(log_dir='logs')
 ]
 
-output = model.fit(X, Y, validation_split=0.2, epochs=50, batch_size=32, callbacks=call_backs)
+output = model.fit(X_train, Y_train, validation_split=0.2, epochs=30, batch_size=32, callbacks=call_backs)
