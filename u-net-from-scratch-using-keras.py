@@ -121,4 +121,29 @@ call_backs = [
     tf.keras.callbacks.TensorBoard(log_dir='logs')
 ]
 
-output = model.fit(X_train, Y_train, validation_split=0.2, epochs=30, batch_size=32, callbacks=call_backs)
+output = model.fit(X_train, Y_train, validation_split=0.2, epochs=50, batch_size=32, callbacks=call_backs)
+
+idx = random.randint(0, len(X_train))
+preds_train = model.predict(X_train[:int(X_train.shape[0]*0.9)], verbose=1)
+preds_val = model.predict(X_train[int(X_train.shape[0]*0.9):], verbose=1)
+preds_test = model.predict(X_test, verbose=1)
+
+preds_train_t = (preds_train > 0.5).astype(np.uint8)
+preds_val_t = (preds_val > 0.5).astype(np.uint8)
+preds_test_t = (preds_test > 0.5).astype(np.uint8)
+
+ix = random.randint(0, len(preds_train_t))
+imshow(X_train[ix])
+plt.show()
+imshow(np.squeeze(Y_train[ix]))
+plt.show()
+imshow(np.squeeze(preds_train_t[ix]))
+plt.show()
+
+ix = random.randint(0, len(preds_val_t))
+imshow(X_train[int(X_train.shape[0]*0.9):][ix])
+plt.show()
+imshow(np.squeeze(Y_train[int(Y_train.shape[0]*0.9):][ix]))
+plt.show()
+imshow(np.squeeze(preds_val_t[ix]))
+plt.show()
