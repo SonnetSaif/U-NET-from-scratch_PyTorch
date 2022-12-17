@@ -128,9 +128,9 @@ preds_train = model.predict(X_train[:int(X_train.shape[0]*0.9)], verbose=1)
 preds_val = model.predict(X_train[int(X_train.shape[0]*0.9):], verbose=1)
 preds_test = model.predict(X_test, verbose=1)
 
-preds_train_t = (preds_train > 0.5).astype(np.uint8)
-preds_val_t = (preds_val > 0.5).astype(np.uint8)
-preds_test_t = (preds_test > 0.5).astype(np.uint8)
+preds_train_t = (preds_train > 0.6).astype(np.uint8)
+preds_val_t = (preds_val > 0.6).astype(np.uint8)
+preds_test_t = (preds_test > 0.6).astype(np.uint8)
 
 ix = random.randint(0, len(preds_train_t))
 imshow(X_train[ix])
